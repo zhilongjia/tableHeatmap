@@ -18,14 +18,15 @@ function(input, output) {
     output$table <- DT::renderDataTable(DT::datatable({
         
         dat <- datasetInput()
-        dat[,-1] <- round(dat[,-1], 3)
         tibble::column_to_rownames(dat)
     
-    }, options = list(paging = FALSE, searching=FALSE,
-                      columnDefs = list(list(width = '80%', targets = "_all"))
-    ) ) %>% formatStyle(
-        colnames(dat)[-1],
-        backgroundColor = styleInterval(c(-1, -0.3, 0.3, 1), c('LimeGreen', 'Lime', 'white', '#F00000', '#A00000'))
-    )
+    }, options = list(paging = FALSE, searching=FALSE, colReorder = TRUE,
+                      dom = 'Bfrtip', buttons = I('colvis'), scrollX = TRUE,
+                      fixedColumns = list(leftColumns = 1), fixedHeader = TRUE #,
+                     # columnDefs = list(list(width = '80%', targets = "_all"))
+    ), extensions = c('ColReorder', 'Buttons', 'FixedColumns', 'FixedHeader') ) %>% formatStyle(
+        colnames(dat)[-1], 
+        backgroundColor = styleInterval(c(-2, -1, -0.3, 0.3, 1, 2), c('DarkGreen', 'LimeGreen', 'Lime', 'White', 'LightCoral', 'Red', 'DarkRed'))
+    ) %>%  formatRound(colnames(dat)[-1], 3)
     )
 }
